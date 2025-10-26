@@ -56,16 +56,16 @@
       }
     ],
     "file_hits": {
-      "/var/task/lib/payment_client.py": 1,
       "/var/task/payment_handler.py": 1,
-      "DatabaseManager.java": 1,
+      "/var/task/lib/payment_client.py": 1,
       "OrderService.java": 1,
       "HikariPool.java": 1,
+      "DatabaseManager.java": 1,
+      "/app/src/services/order-service.js": 1,
       "/app/src/database/connection.js": 1,
       "/app/src/controllers/checkout-controller.js": 1,
-      "/app/src/services/order-service.js": 1,
-      "PaymentGateway.java": 1,
       "PaymentService.java": 1,
+      "PaymentGateway.java": 1,
       "ThreadPoolExecutor.java": 1
     },
     "deploy": {
@@ -138,16 +138,16 @@
         }
       ],
       "file_impact": {
-        "/var/task/lib/payment_client.py": 1,
         "/var/task/payment_handler.py": 1,
-        "DatabaseManager.java": 1,
+        "/var/task/lib/payment_client.py": 1,
         "OrderService.java": 1,
         "HikariPool.java": 1,
+        "DatabaseManager.java": 1,
+        "/app/src/services/order-service.js": 1,
         "/app/src/database/connection.js": 1,
         "/app/src/controllers/checkout-controller.js": 1,
-        "/app/src/services/order-service.js": 1,
-        "PaymentGateway.java": 1,
         "PaymentService.java": 1,
+        "PaymentGateway.java": 1,
         "ThreadPoolExecutor.java": 1
       },
       "deployment_info": {
@@ -164,6 +164,54 @@
       }
     }
   },
+  "error_summarizer_output": {
+    "detailed_analysis": "Incident Analysis Report\n\nExecutive Summary:\nOn 2025-10-25 at 21:54Z, a deployment to reduce the payment timeout from 30 seconds to 5 seconds led to a significant increase in payment processing errors across the system. This incident had a HIGH business impact, as the errors started immediately after deployment and affected key payment processing components. The rapid increase in errors led to payment failures and disrupted the checkout process for customers, resulting in potential lost revenue.\n\nTimeline Correlation:\n- 2025-10-25T21:45:00Z: Deployment of the code changes to reduce the payment timeout from 30 seconds to 5 seconds.\n- 2025-10-25T21:54:00Z: Spike in payment processing errors, with 3 errors reported.\n- The errors started 9 minutes after the deployment, indicating a clear correlation between the deployment and the incident.\n\nRoot Cause Analysis:\nThe root cause of the incident was the deployment of the changes to the payment timeout settings in the payment_handler.py, payment_client.py, and related files. The reduction of the timeout from 30 seconds to 5 seconds caused issues with the payment service connections, leading to increased timeouts and errors. This issue was compounded by the fact that the affected files were directly involved in payment processing, which led to the widespread impact across the system.\n\nImmediate Actions:\n1. Rollback the deployment: Immediately roll back the deployment to the previous stable version, reverting the changes to the payment timeout settings.\n2. Monitor the system: Closely monitor the system for any further errors or issues and ensure that the payment processing is restored to normal operations.\n\nRollback Instructions:\n1. Identify the previous stable deployment version: a1b2c3d-1\n2. Deploy the previous stable version:\n   - Git checkout a1b2c3d-1\n   - Build the application\n   - Deploy the application to the production environment\n3. Verify that the payment processing is restored to normal operations and that the error rates have returned to acceptable levels.\n\nRisk Assessment:\nIf no action is taken, the system will continue to experience high rates of payment processing errors, leading to a significant impact on the business. Customers will be unable to complete purchases, resulting in lost revenue and potential damage to the company's reputation. The longer the issue persists, the greater the risk of further escalation and potential service outages.",
+    "error_summaries": [
+      "1. The specific component/file that is failing is the `payment_handler.py` and `payment_client.py`, as indicated by the \"Changed Files\" section of the deployment context.\n\n2. The deployment changes, which reduced the payment timeout from 30 seconds to 5 seconds, are directly related to the observed error as the payment service is timing out, suggesting the reduced timeout may have been too aggressive.\n\n3. The user-facing functionality impacted is the payment processing, as the error message indicates a timeout connecting to the payment service.\n\n4. Given the high correlation between the deployment changes and the error spike, there is a high confidence that the deployment caused this error.",
+      "1. The specific component/file that is failing is the `payment_client.py` file, which is responsible for making the payment request.\n\n2. This error is directly related to the deployment change that reduced the payment timeout from 30 seconds to 5 seconds, as indicated in the deployment message.\n\n3. The user-facing functionality that is impacted is the ability to successfully complete a payment transaction, as the payment request is timing out.\n\n4. Given the high correlation between the deployment and the error spike, and the direct relationship between the deployment changes and the error message, there is a high confidence that the deployment caused this error.",
+      "Based on the provided information, the specific component/file that is failing is the `payment_handler.py` and `payment_client.py` files, as they are directly related to the payment processing functionality. The deployment changes, which reduced the payment timeout from 30 seconds to 5 seconds, likely caused the \"Connection reset by peer\" error, as the reduced timeout may have been too aggressive and led to premature connection termination. This error would impact the user's ability to complete payments on the platform. Given the high correlation between the deployment and the error spike, there is a high confidence that the deployment changes caused this specific error.",
+      "1. The error is occurring in the `OrderService` class, specifically in the `createOrder()` method, which is likely making a database connection through the `DatabaseManager` class.\n\n2. The deployment changes mention reducing the payment timeout from 30 seconds to 5 seconds, which may have impacted the database connection pool, leading to the \"Timeout waiting for idle object\" error.\n\n3. The user-facing functionality impacted is likely the ability to create new orders, as the `OrderService` is responsible for this functionality.\n\n4. Given the high correlation between the deployment changes and the error spike, there is a high confidence that the deployment caused this error due to the changes made to the payment timeout configuration.",
+      "1. The specific component/file that is failing is the database connection in the `/app/src/database/connection.js` file, which is being called from the `/app/src/services/order-service.js` file and the `/app/src/controllers/checkout-controller.js` file.\n\n2. The deployment changes, which reduced the payment timeout from 30s to 5s, do not seem to be directly related to the database connection failure. The error message indicates a connection timeout issue with the database at the IP address `10.0.1.25:5432`.\n\n3. The user-facing functionality impacted by this error is the checkout process, as the error is occurring in the checkout controller.\n\n4. The high correlation between the error spike and the deployment, as well as the specific error message, suggest a high likelihood that the deployment caused this error. However, the changes made in the deployment do not appear"
+    ],
+    "timeline_analysis": {
+      "deploy_timestamp": "2025-10-25T21:45:00Z",
+      "error_spike_timestamp": "2025-10-25 21:54",
+      "minutes_after_deploy": 9,
+      "peak_error_count": 3,
+      "correlation": "high",
+      "deploy_impact": true
+    },
+    "recommendations": [
+      {
+        "priority": "CRITICAL",
+        "action": "Immediate rollback to commit prior to a1b2c3d",
+        "reason": "Error spike occurred 9 minutes after deployment",
+        "timeline": "Deploy at 2025-10-25T21:45:00Z \u2192 Errors at 2025-10-25 21:54",
+        "confidence": "HIGH - Strong temporal correlation"
+      },
+      {
+        "priority": "HIGH",
+        "action": "Activate incident response team",
+        "reason": "8 errors affecting multiple components",
+        "timeline": "Immediate action required",
+        "confidence": "HIGH - Error volume exceeds threshold"
+      },
+      {
+        "priority": "MEDIUM",
+        "action": "Review changes in src/payment_handler.py",
+        "reason": "File was modified in deployment a1b2c3d and may be causing errors",
+        "timeline": "Within 1 hour",
+        "confidence": "MEDIUM - File correlation identified"
+      },
+      {
+        "priority": "MEDIUM",
+        "action": "Review changes in lib/payment_client.py",
+        "reason": "File was modified in deployment a1b2c3d and may be causing errors",
+        "timeline": "Within 1 hour",
+        "confidence": "MEDIUM - File correlation identified"
+      }
+    ]
+  },
   "pipeline_status": "success",
-  "timestamp": "2025-10-25T17:35:00Z"
+  "timestamp": "2025-10-25T19:20:00Z"
 }

@@ -1,5 +1,5 @@
 {
-  "Comment": "DevAngel Error Analysis Pipeline",
+  "Comment": "DevAngel Error Analysis Pipeline with Bedrock Summarizer",
   "StartAt": "SourceAdapter",
   "States": {
     "SourceAdapter": {
@@ -12,6 +12,12 @@
       "Resource": "arn:aws:lambda:us-east-1:478047815638:function:ErrorAnalyzer",
       "InputPath": "$.source_adapter_output",
       "ResultPath": "$.error_analyzer_output",
+      "Next": "ErrorSummarizer"
+    },
+    "ErrorSummarizer": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:478047815638:function:ErrorSummarizer",
+      "ResultPath": "$.error_summarizer_output",
       "Next": "CombineResults"
     },
     "CombineResults": {
@@ -19,6 +25,7 @@
       "Parameters": {
         "source_adapter_output.$": "$.source_adapter_output",
         "error_analyzer_output.$": "$.error_analyzer_output",
+        "error_summarizer_output.$": "$.error_summarizer_output",
         "pipeline_status": "success",
         "timestamp.$": "$$.State.EnteredTime"
       },
