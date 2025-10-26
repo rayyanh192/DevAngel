@@ -89,5 +89,5 @@ if __name__ == "__main__":
     with open('dashboard_data.json', 'w') as f:
         json.dump(result, f, indent=2)
     
-    print(f"\n✅ Dashboard data saved to dashboard_data.json")
+    print("Dashboard data saved to dashboard_data.json")
     print("This JSON is ready to be consumed by your frontend!")

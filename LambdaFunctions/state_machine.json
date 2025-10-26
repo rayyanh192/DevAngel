@@ -1,0 +1,28 @@
+{
+  "Comment": "DevAngel Error Analysis Pipeline",
+  "StartAt": "SourceAdapter",
+  "States": {
+    "SourceAdapter": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:478047815638:function:SourceAdapter",
+      "Next": "ErrorAnalyzer"
+    },
+    "ErrorAnalyzer": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:478047815638:function:ErrorAnalyzer",
+      "InputPath": "$.source_adapter_output",
+      "ResultPath": "$.error_analyzer_output",
+      "Next": "CombineResults"
+    },
+    "CombineResults": {
+      "Type": "Pass",
+      "Parameters": {
+        "source_adapter_output.$": "$.source_adapter_output",
+        "error_analyzer_output.$": "$.error_analyzer_output",
+        "pipeline_status": "success",
+        "timestamp.$": "$$.State.EnteredTime"
+      },
+      "End": true
+    }
+  }
+}
